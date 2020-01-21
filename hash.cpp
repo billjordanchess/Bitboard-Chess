@@ -13,11 +13,6 @@ int hash_start,hash_dest;
 
 U64 Random2(int x);//
 
-/*
-
-A hash table entry includes a lock and start and dest squares.
-
-*/
 struct hashp
 {
 U64 hashlock;
@@ -112,20 +107,13 @@ U64 loc=0;
 int c=0;
 for(int x=0;x<64;x++)
 {
-if(board[x]!=6)
-{
-	if(bit_units[0] & mask[x]) c = 0;
-	if(bit_units[1] & mask[x]) c = 1;
-    loc ^= lock[c][board[x]][x];
-}
-}
-/*
-for(int x=0;x<2;x++)
-	for(int y=0;x<6;y++)
+	if(board[x]!=6)
 	{
-		loc ^= lock[x][y]][NextBit(bit_pieces[x][y])];
+		if(bit_units[0] & mask[x]) c = 0;
+		if(bit_units[1] & mask[x]) c = 1;
+		loc ^= lock[c][board[x]][x];
 	}
-*/
+}
 return loc;
 }
 /*
@@ -139,12 +127,12 @@ U64 key=0;
 int c=0;
 for(int x=0;x<64;x++)
 {
-if(board[x]!=6)
-{
-	if(bit_units[0] & mask[x]) c = 0;
-	if(bit_units[1] & mask[x]) c = 1;
-    key ^= hash[c][board[x]][x];
-}
+	if(board[x]!=6)
+	{
+		if(bit_units[0] & mask[x]) c = 0;
+		if(bit_units[1] & mask[x]) c = 1;
+		key ^= hash[c][board[x]][x];
+	}
 }
 return key;
 }
@@ -160,7 +148,6 @@ if(hashpos[s][currentkey].hashlock != currentlock)
 {
   return false;
 }
-
 hash_start = hashpos[s][currentkey].start;
 hash_dest = hashpos[s][currentkey].dest;
 return true;

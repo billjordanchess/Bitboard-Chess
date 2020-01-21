@@ -7,10 +7,6 @@ int rx[6] = {-5,5,15,25,35,0};
 int qx[6] = {-9,1,11,21,31,0};
 int kx[6] = {0,10,20,30,40,0};
 
-int ForwardSquare[2] = {8,-8};
-int Double[2] = {16,-16};
-int OtherSide[2] = {1,0};
-
 int mc;
 int castle;
 
@@ -29,7 +25,7 @@ moves for them.
 
 void Gen(const int s,const int xs)
 {
-	int i, j, n;
+	int sq, j, n;
 	
 	BITBOARD b1,b2,b3;
 
@@ -40,196 +36,196 @@ void Gen(const int s,const int xs)
 
 	if(s==0)
 	{
-	  b1 = bit_pieces[0][0] & ((bit_units[1] & not_h_file)>>7);
-	  b2 = bit_pieces[0][0] & ((bit_units[1] & not_a_file)>>9);
-	  b3 = bit_pieces[0][0] & ~(bit_all>>8);
+	  b1 = bit_pieces[0][P] & ((bit_units[1] & not_h_file)>>7);
+	  b2 = bit_pieces[0][P] & ((bit_units[1] & not_a_file)>>9);
+	  b3 = bit_pieces[0][P] & ~(bit_all>>8);
 	}
 	else
 	{
-      b1 = bit_pieces[1][0] & ((bit_units[0] & not_h_file)<<9);
-	  b2 = bit_pieces[1][0] & ((bit_units[0] & not_a_file)<<7);
-	  b3 = bit_pieces[1][0] & ~(bit_all<<8);
+      b1 = bit_pieces[1][P] & ((bit_units[0] & not_h_file)<<9);
+	  b2 = bit_pieces[1][P] & ((bit_units[0] & not_a_file)<<7);
+	  b3 = bit_pieces[1][P] & ~(bit_all<<8);
 	}
+	
 	while(b1)
 	{
-      i = NextBit(b1);
-	  b1 &= not_mask[i];
-	  n = pawnleft[s][i];
-	  AddCapture(i,n,px[board[n]]);
+      sq = NextBit(b1);
+	  b1 &= not_mask[sq];
+	  n = pawnleft[s][sq];
+	  AddCapture(sq,n,px[board[n]]);
 	}
 	while(b2)
 	{
-      i = NextBit(b2);
-	  b2 &= not_mask[i];
-	  n = pawnright[s][i];
-	  AddCapture(i,n,px[board[n]]);
+      sq = NextBit(b2);
+	  b2 &= not_mask[sq];
+	  n = pawnright[s][sq];
+	  AddCapture(sq,n,px[board[n]]);
 	}
 	while(b3)
 	{
-		i = NextBit(b3);
-		b3 &= not_mask[i];
-		AddMove(i, pawnplus[side][i]);
-		if(rank[s][i]==1 && board[pawndouble[s][i]] == 6)
-			AddMove(i,pawndouble[s][i]);
+		sq = NextBit(b3);
+		b3 &= not_mask[sq];
+		AddMove(sq, pawnplus[side][sq]);
+		if(rank[s][sq]==1 && board[pawndouble[s][sq]] == EMPTY)
+			AddMove(sq,pawndouble[s][sq]);
 	}
 
-b1 = bit_pieces[s][1];
+b1 = bit_pieces[s][N];
 while(b1)
 {
-	i = NextBit(b1);
-	b1 &= not_mask[i];
-	b2 = bit_knightmoves[i] & bit_units[xs];
+	sq = NextBit(b1);
+	b1 &= not_mask[sq];
+	b2 = bit_knightmoves[sq] & bit_units[xs];
 	while(b2)
 	{
 		n = NextBit(b2);
-		AddCapture(i,n,nx[board[n]]);
+		AddCapture(sq,n,nx[board[n]]);
 		b2 &= not_mask[n];
 	}
-	b2 = bit_knightmoves[i] & ~bit_all;
+	b2 = bit_knightmoves[sq] & ~bit_all;
 	while(b2)
 	{
 		n = NextBit(b2);
-		AddMove(i,n);
+		AddMove(sq,n);
 		b2 &= not_mask[n];
 	}
 }
 
-b1 = bit_pieces[s][2];
+b1 = bit_pieces[s][B];
 while(b1)
 {
-	i = NextBit(b1);
-	b1 &= not_mask[i];	
+	sq = NextBit(b1);
+	b1 &= not_mask[sq];	
 	for (j = 1; j < 8; j+=2)
-if(mask_vectors[i][j] & bit_all)
+if(mask_vectors[sq][j] & bit_all)
 {
-	for (n = i;;) 
+	for (n = sq;;) 
 	{
 		n = qrb_moves[n][j];
 		if(mask[n] & bit_all)
 		{
 		if(mask[n] & bit_units[xs])
 		{
-			AddCapture(i,n,bx[board[n]]);
+			AddCapture(sq,n,bx[board[n]]);
 		}
 		break;
 		}
-		AddMove(i,n);
+		AddMove(sq,n);
 	}
 }
 else
 {
-	for (n = i;;) 
+	for (n = sq;;) 
 	{
 		n = qrb_moves[n][j];
 		if (n == -1)
 			break;
-		AddMove(i,n);
+		AddMove(sq,n);
 	}
 }
 }
 
-b1 = bit_pieces[s][3];
+b1 = bit_pieces[s][R];
 while(b1)
 {
-	i = NextBit(b1);
-	b1 &= not_mask[i];
+	sq = NextBit(b1);
+	b1 &= not_mask[sq];
 	for (j = 0; j < 8; j+=2)
-		if(mask_vectors[i][j] & bit_all)
+		if(mask_vectors[sq][j] & bit_all)
 		{
-		for (n = i;;)
+		for (n = sq;;)
 		{
 			n = qrb_moves[n][j];
 			if(mask[n] & bit_all)
 			{
 			if(mask[n] & bit_units[xs])
 			{
-				AddCapture(i,n,rx[board[n]]);
+				AddCapture(sq,n,rx[board[n]]);
 			}
 			break;
 			}
-			AddMove(i,n);
+			AddMove(sq,n);
 		}
 		}
 		else
 		{
-		for (n = i;;)
+		for (n = sq;;)
 		{
 			n = qrb_moves[n][j];
 			if (n == -1)
 				break;
-			AddMove(i,n);
+			AddMove(sq,n);
 		}
 		}
 }
 
-b1 = bit_pieces[s][4];
+b1 = bit_pieces[s][Q];
 while(b1)
 {
-	i = NextBit(b1);
-	b1 &= not_mask[i];
+	sq = NextBit(b1);
+	b1 &= not_mask[sq];
 	for (j = 0; j < 8; j++)
-	if(mask_vectors[i][j] & bit_all)
+	if(mask_vectors[sq][j] & bit_all)
 	{
-		for (n = i;;) 
+		for (n = sq;;) 
 		{
 			n = qrb_moves[n][j];
 			if(mask[n] & bit_all)
 			{
 				if(mask[n] & bit_units[xs])
 				{
-					AddCapture(i,n,qx[board[n]]);
+					AddCapture(sq,n,qx[board[n]]);
 					break;
 				}
 				break;
 			}
-			AddMove(i,n);
+			AddMove(sq,n);
 		}
 	}
 	else
 	{
-	for (n = i;;) 
+	for (n = sq;;) 
 		{
 			n = qrb_moves[n][j];
 			if (n == -1)
 				break;
-			AddMove(i,n);
+			AddMove(sq,n);
 		}
 	}
 }
 
-i = NextBit(bit_pieces[s][5]);
-b1 = bit_kingmoves[i] & bit_units[xs];
+sq = NextBit(bit_pieces[s][K]);
+b1 = bit_kingmoves[sq] & bit_units[xs];
 while(b1)
 {
 	n = NextBit(b1);
-	AddCapture(i,n,kx[board[n]]);
+	AddCapture(sq,n,kx[board[n]]);
 	b1 &= not_mask[n];
 }
-b1 = bit_kingmoves[i] & ~bit_all;
+b1 = bit_kingmoves[sq] & ~bit_all;
 while(b1)
 {
 	n = NextBit(b1);
-	AddMove(i,n);
+	AddMove(sq,n);
 	b1 &= not_mask[n];
 }
 first_move[ply + 1] = mc;
-//ShowAll(ply);
 }
 
 void AddMove(const int x,const int sq)
 {
-	move_list[mc].start = x;
-	move_list[mc].dest = sq;
-	move_list[mc].score = history[x][sq];
-	mc++;
+move_list[mc].start = x;
+move_list[mc].dest = sq;
+move_list[mc].score = history[x][sq];
+mc++;
 }
 
 void AddCapture(const int x,const int sq,const int score)
 {
-	move_list[mc].start = x;
-	move_list[mc].dest = sq;
-	move_list[mc].score = score + CAPTURE_SCORE;
-	mc++;
+move_list[mc].start = x;
+move_list[mc].dest = sq;
+move_list[mc].score = score + CAPTURE_SCORE;
+mc++;
 }
 
 /*
@@ -246,10 +242,10 @@ int ep = game_list[hply-1].dest;
 	
 if(board[ep] == 0 && abs(game_list[hply-1].start - ep) == 16)
 {
-	if(col[ep] > 0 && mask[ep-1] & bit_pieces[side][0])
-		AddCapture(ep-1,ep+ForwardSquare[side],10);				
-	if(col[ep] < 7 && mask[ep+1] & bit_pieces[side][0])
-		AddCapture(ep+1,ep+ForwardSquare[side],10);
+	if(col[ep] > 0 && mask[ep-1] & bit_pieces[side][P])
+		AddCapture(ep-1,pawnplus[side][ep],10);				
+	if(col[ep] < 7 && mask[ep+1] & bit_pieces[side][P])
+		AddCapture(ep+1,pawnplus[side][ep],10);
 }
 }
 /*
@@ -262,30 +258,17 @@ void GenCastle()
 {
 if(side==0)
 {
-if(castle & 1)
-{
-	if(!(bit_between[H1][E1] & bit_all))
+	if(castle & 1 && !(bit_between[H1][E1] & bit_all))
 		AddMove(E1,G1);
-}
-if(castle & 2) 
-{
-	if(!(bit_between[A1][E1] & bit_all))
-		AddMove(E1,C1);
-}
+	if(castle & 2 && !(bit_between[A1][E1] & bit_all))
+			AddMove(E1,C1);
 }
 else
 {
-if(castle & 4) 
-{
-	if(!(bit_between[E8][H8] & bit_all))
-		AddMove(E8,G8);
-}
-if(castle & 8) 
-{
-	if(!(bit_between[E8][A8] & bit_all))
-		AddMove(E8,C8);
-}
-
+	if(castle & 4 && !(bit_between[E8][H8] & bit_all))
+			AddMove(E8,G8);
+	if(castle & 8 && !(bit_between[E8][A8] & bit_all))
+			AddMove(E8,C8);
 }
 }
 /*
@@ -296,39 +279,37 @@ are being generated instead of all moves.
 */
 void GenCaptures(const int s, const int xs)
 {
-first_move[ply + 1] = first_move[ply];
-
 mc = first_move[ply];
 
-int sq,sq2,i,n;
+int sq,sq2,n;
 BITBOARD b1,b2;
 
 if(s==0)
 {
-	b1 = bit_pieces[0][0] & ((bit_units[1] & not_h_file)>>7);
-	b2 = bit_pieces[0][0] & ((bit_units[1] & not_a_file)>>9);
+	b1 = bit_pieces[0][P] & ((bit_units[1] & not_h_file)>>7);
+	b2 = bit_pieces[0][P] & ((bit_units[1] & not_a_file)>>9);
 }
 else
 {
-    b1 = bit_pieces[1][0] & ((bit_units[0] & not_h_file)<<9);
-	b2 = bit_pieces[1][0] & ((bit_units[0] & not_a_file)<<7);
+    b1 = bit_pieces[1][P] & ((bit_units[0] & not_h_file)<<9);
+	b2 = bit_pieces[1][P] & ((bit_units[0] & not_a_file)<<7);
 }
 while(b1)
 {
-    i = NextBit(b1);
-	b1 &= not_mask[i];
-	n = pawnleft[s][i];
-	AddCapture(i,n,px[board[n]]);
+    sq = NextBit(b1);
+	b1 &= not_mask[sq];
+	n = pawnleft[s][sq];
+	AddCapture(sq,n,px[board[n]]);
 }
 while(b2)
 {
-    i = NextBit(b2);
-	b2 &= not_mask[i];
-	n = pawnright[s][i];
-	AddCapture(i,n,px[board[n]]);
+    sq = NextBit(b2);
+	b2 &= not_mask[sq];
+	n = pawnright[s][sq];
+	AddCapture(sq,n,px[board[n]]);
 } 
 
-b1 = bit_pieces[s][1];
+b1 = bit_pieces[s][N];
 while(b1)
 {
 	sq = NextBit(b1);
@@ -342,7 +323,7 @@ while(b1)
 	b1 &= not_mask[sq];
 }
 
-b1 = bit_pieces[s][2];
+b1 = bit_pieces[s][B];
 while(b1)
 {
 	sq = NextBit(b1);
@@ -357,7 +338,7 @@ while(b1)
 	b1 &= not_mask[sq];
 }
 
-b1 = bit_pieces[s][3];
+b1 = bit_pieces[s][R];
 while(b1)
 {
 	sq = NextBit(b1);
@@ -372,7 +353,7 @@ while(b1)
 	b1 &= not_mask[sq];
 }
 
-b1 = bit_pieces[s][4];
+b1 = bit_pieces[s][Q];
 while(b1)
 {
 	sq = NextBit(b1);
@@ -387,7 +368,7 @@ while(b1)
 	b1 &= not_mask[sq];
 }
 
-sq = NextBit(bit_pieces[s][5]);
+sq = NextBit(bit_pieces[s][K]);
 b2 = bit_kingmoves[sq] & bit_units[xs];
 while(b2)
 {

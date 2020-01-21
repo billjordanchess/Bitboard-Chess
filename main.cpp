@@ -55,9 +55,9 @@ extern int move_start,move_dest;
 int main()
 {
 SetBits();
-printf("Bills Basic Chess Engine\n");
+printf("Bills Bitboard Chess Engine\n");
 printf("Version 1.0, 15/1/20\n");
-printf("Copyright 2020 Bill Jordan \n");
+printf("Bill Jordan 2020\n");
 printf("\n");
 printf("\"help\" displays a list of commands.\n");
 printf("\n");
@@ -215,8 +215,8 @@ if (side == computer_side)
 	}
 	if (!strcmp(s, "sw")) 
 	{
-		side = 1-side;
-		xside = 1-xside;
+		side ^= 1;
+		xside ^= 1;
 		continue;
 	}
 	if (!strcmp(s, "undo")) 
@@ -599,7 +599,7 @@ void PrintResult()
 		DisplayBoard();
         printf(" end of game ");
 	 
-		if (Attack(xside,NextBit(bit_pieces[side][5])))
+		if (Attack(xside,NextBit(bit_pieces[side][K])))
         {
 			if (side == 0)
 			{
@@ -719,10 +719,10 @@ while(ts[c])
 	switch(ts[c])
 	{
 		case '-': break;
-		case 'K':if(bit_pieces[0][5] & mask[E1]) castle |= 1;break;
-		case 'Q':if(bit_pieces[0][5] & mask[E1]) castle |= 2;break;
-		case 'k':if(bit_pieces[1][5] & mask[E8]) castle |= 4;break;
-		case 'q':if(bit_pieces[1][5] & mask[E8]) castle |= 8;break;
+		case 'K':if(bit_pieces[0][K] & mask[E1]) castle |= 1;break;
+		case 'Q':if(bit_pieces[0][K] & mask[E1]) castle |= 2;break;
+		case 'k':if(bit_pieces[1][K] & mask[E8]) castle |= 4;break;
+		case 'q':if(bit_pieces[1][K] & mask[E8]) castle |= 8;break;
 		default:break;
 	}
 c++;
@@ -774,8 +774,6 @@ RandomizeHash();
 SetTables();
 SetMoves();
 InitBoard();	
-Gen(side,xside);
-//ShowAll(0);
 computer_side = EMPTY;
 player[0] = 0;
 player[1] = 0;
@@ -787,7 +785,6 @@ void NewGame()
 {
 InitBoard();
 Gen(side,xside);
-//ShowAll(0);
 }
 
 void SetMaterial()

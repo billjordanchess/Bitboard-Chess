@@ -2,8 +2,6 @@
 
 int ReverseSquare[2] = {-8,8};
 
-void DisplayBoard();
-
 game* g;
 /*
 
@@ -13,8 +11,6 @@ evaluation) whenever a piece moves.
 */
 void UpdatePiece(const int s,const int p,const int start,const int dest)
 {
-	if(s>6 || p>6 || start>63 || dest>63)
-		DisplayBoard();
 bit_units[s] &= not_mask[start];
 bit_units[s] |= mask[dest];
 bit_all = bit_units[0] | bit_units[1];
@@ -33,8 +29,6 @@ evaluation) whenever a piece is removed.
 */
 void RemovePiece(const int s,const int p,const int sq)
 {
-		if(s>6 || p>6 ||sq>63)
-		DisplayBoard();
 AddKey(s,p,sq);
 board[sq] = EMPTY;
 bit_units[s] &= not_mask[sq];
@@ -49,8 +43,6 @@ evaluation) whenever a piece is added.
 */
 void AddPiece(const int s,const int p,const int sq)
 {
-		if(s>6 || p>6 ||sq>63)
-		DisplayBoard();
 board[sq] = p;
 AddKey(s,p,sq);
 bit_units[s] |= mask[sq];
@@ -145,7 +137,7 @@ else
 
 side ^= 1;
 xside ^= 1;
-if (Attack(side,NextBit(bit_pieces[xside][5]))) 
+if (Attack(side,NextBit(bit_pieces[xside][K]))) 
 {
 	TakeBack();
 	return false;
@@ -221,7 +213,7 @@ int MakeRecapture(const int from,const int to)
 
 	side ^= 1;
 	xside ^= 1;
-	if (Attack(side,NextBit(bit_pieces[xside][5]))) 
+	if (Attack(side,NextBit(bit_pieces[xside][K]))) 
 	{
 		UnMakeRecapture();
 		return false;

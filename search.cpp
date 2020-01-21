@@ -36,16 +36,8 @@ if (stop_search)
 }
 if(fixed_time==0)
 {
-	/*
-if(game_list[hply-1].capture < 6 && game_list[hply-1].capture == board[game_list[hply-1].dest])
-{
-	max_time = max_time/2;
-}
-*/
-if (Attack(xside,NextBit(bit_pieces[side][5])))
-{
-	max_time = max_time/2;
-}
+	if (Attack(xside,NextBit(bit_pieces[side][K])))
+		max_time = max_time/2;
 }
 start_time = GetTime();
 stop_time = start_time + max_time;
@@ -55,7 +47,7 @@ nodes = 0;
    
 NewPosition();
 memset(history, 0, sizeof(history));	
-//printf("ply      nodes  score  pv\n");
+printf("ply      nodes  score  pv\n");
 
 for (int i = 1; i <= max_depth; ++i) 
 {
@@ -146,7 +138,7 @@ int bestscore = -10001;
 
 int check = 0;
 
-if (Attack(xside,NextBit(bit_pieces[side][5]))) 
+if (Attack(xside,NextBit(bit_pieces[side][K]))) 
 {
 	check = 1;
 }
@@ -169,7 +161,7 @@ for (int i = first_move[ply]; i < first_move[ply + 1]; ++i)
 		}
 		c++;
 	
-	if (Attack(xside,NextBit(bit_pieces[side][5]))) 
+	if (Attack(xside,NextBit(bit_pieces[side][K]))) 
 	{
 		d = depth;
 	}
@@ -209,7 +201,7 @@ for (int i = first_move[ply]; i < first_move[ply + 1]; ++i)
 }
 	if (c == 0) 
 	{
-		if (Attack(xside,NextBit(bit_pieces[side][5]))) 
+		if (Attack(xside,NextBit(bit_pieces[side][K]))) 
 		{
 			return -10000 + ply;
 		}
@@ -373,9 +365,7 @@ int reps2()
 	for (int i = hply-4; i >= hply-fifty; i-=2)
 	{
 		if (game_list[i].hash == currentkey && game_list[i].lock == currentlock)
-		{
 			return 1;
-		}
 	}
 	return 0;
 }
@@ -385,7 +375,7 @@ Sort searches the move list for the move with the highest score.
 It is moved to the top of the list so that it will be played next.
 
 */
-int Sort(const int from)
+void Sort(const int from)
 {
 	move g;
 
@@ -401,8 +391,6 @@ int Sort(const int from)
 	g = move_list[from];
 	move_list[from] = move_list[bi];
 	move_list[bi] = g;
-
-	return move_list[bi].score;
 }
 /*
 

@@ -3,15 +3,14 @@
 int side,xside;
 int fifty;
 int ply,hply;
-
 int nodes;
 
 int board[64];
 
 int history[64][64];
-
 int square_score[2][6][64];
 int king_endgame[2][64];
+
 int pawn_mat[2];
 int piece_mat[2];
 int passed[2][64];
@@ -246,22 +245,22 @@ void SetTables()
 
 for(int x=0;x<64;x++)
 {
-    square_score[0][0][x] = pawn_score[x] + 100;
-    square_score[0][1][x] = knight_score[x] + 300;
-    square_score[0][2][x] = bishop_score[x] + 300;
-	square_score[0][3][x] = rook_score[x] + 500;
-    square_score[0][4][x] = queen_score[x] + 900;
-    square_score[0][5][x] = king_score[x];
+    square_score[0][P][x] = pawn_score[x] + 100;
+    square_score[0][N][x] = knight_score[x] + 300;
+    square_score[0][B][x] = bishop_score[x] + 300;
+	square_score[0][R][x] = rook_score[x] + 500;
+    square_score[0][Q][x] = queen_score[x] + 900;
+    square_score[0][K][x] = king_score[x];
 
-    square_score[1][0][x] = pawn_score[Flip[x]] + 100;
-    square_score[1][1][x] = knight_score[Flip[x]] + 300;
-    square_score[1][2][x] = bishop_score[Flip[x]] + 300;
-	square_score[1][3][x] = rook_score[Flip[x]] + 500;
-    square_score[1][4][x] = queen_score[Flip[x]] + 900;
-	square_score[1][5][x] = king_score[Flip[x]];
+    square_score[1][P][x] = pawn_score[Flip[x]] + 100;
+    square_score[1][N][x] = knight_score[Flip[x]] + 300;
+    square_score[1][B][x] = bishop_score[Flip[x]] + 300;
+	square_score[1][R][x] = rook_score[Flip[x]] + 500;
+    square_score[1][Q][x] = queen_score[Flip[x]] + 900;
+	square_score[1][K][x] = king_score[Flip[x]];
 
-	king_endgame[0][x] = king_endgame_score[x] - square_score[0][5][x];
-	king_endgame[1][x] = king_endgame_score[x] - square_score[1][5][x];
+	king_endgame[0][x] = king_endgame_score[x] - square_score[0][K][x];
+	king_endgame[1][x] = king_endgame_score[x] - square_score[1][K][x];
 	passed[0][x] = passed_score[Flip[x]];
 	passed[1][x] = passed_score[x];
 }

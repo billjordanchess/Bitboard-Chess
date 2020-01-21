@@ -105,7 +105,7 @@ void ShowAll(int ply);//
 #define Black 1
 
 #define MAX_PLY 64
-#define MOVE_STACK 4000//2000
+#define MOVE_STACK 4000
 #define GAME_STACK 2000
 
 #define HASH_SCORE    100000000
@@ -184,9 +184,6 @@ extern int turn;
 extern int Flip[64];
 
 extern int rank[2][64];
-extern int OtherSide[2];
-extern int ForwardSquare[2];
-extern int Double[2];
 
 extern U64 vectorbits[64][64];
 extern U64 mask_vectors[64][8];
@@ -239,7 +236,7 @@ int Search(int alpha, int beta, int depth);
 int CaptureSearch(int alpha,int beta);
 int ReCaptureSearch(int,const int);
 int reps2();
-int Sort(const int from);
+void Sort(const int from);
 void CheckUp();
 
 //gen.cpp
