@@ -126,7 +126,7 @@ for(int x=0;x<2;x++)
   }
 
   if(bit_pieces[0][Q]==0)
-    score[1] += king_endgame[1][NextBit(bit_pieces[0][K])];
+    score[1] += king_endgame[1][NextBit(bit_pieces[1][K])];
    else
   {
 	if(bit_pieces[1][K] & mask_kingside)
