@@ -27,3 +27,14 @@ Features include:
 The engine can play a human or other engines using software such as Arena or Winboard.
 
 It can load positions for testing.
+
+<ul>
+<li>MS Visual Studio will need to be installed.
+<li>Create a new folder where you want to extract the project.
+<li>Select the Code Button and select <b>Download zip</b>.
+<li>Extract the zip file into the new folder.
+<li>Open the solution file.
+<li>Build and Run.
+</ul>
+
+My 64-bit version of Bitboard Chess is more recent and has more featores.
