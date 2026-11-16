@@ -37,4 +37,4 @@ It can load positions for testing.
 <li>Build and Run.
 </ul>
 
-My 64-bit version of Bitboard Chess is more recent and has more featores.
+My 64-bit version of Bitboard Chess is more recent and has more features.
